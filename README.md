@@ -1,1 +1,1 @@
-# targeted_adversarial_noise_generator
+# targeted adversarial noise generator
