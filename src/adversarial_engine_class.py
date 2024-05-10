@@ -5,7 +5,7 @@ from adversarial_helper_class import AdversarialHelper
 
 
 class AdversarialEngine:
-    def __init__(self, model_name = "resnet50") -> None:
+    def __init__(self, model_name="resnet50") -> None:
         self.model = AdversarialHelper.load_torchvision_pre_trained_model(
             model_name=model_name
         )
@@ -20,7 +20,6 @@ class AdversarialEngine:
 
         self.original_confidence_score = None
         self.adversarial_confidence_score = None
-
 
     def apply_iterative_fgsm_method(self, image, epsilon, target_class, num_steps=15):
         adversarial_image = image.clone().detach()
@@ -43,11 +42,9 @@ class AdversarialEngine:
             adversarial_image.requires_grad = True
 
         return adversarial_image
-    
 
     def apply_projected_gradient_descent_method(self):
         raise NotImplementedError
-
 
     def visualise_attack(
         self, epsilon, original_image_pil, noise_image_pil, adversarial_image_pil
@@ -86,7 +83,6 @@ class AdversarialEngine:
 
         plt.show()
 
-
     def perform_adversarial_attack(self, image_path, epsilon, target_class):
         image = AdversarialHelper.load_and_transform_image_to_tensor(
             image_path=image_path
@@ -96,9 +92,7 @@ class AdversarialEngine:
         self.original_prediction = original_output.max(1, keepdim=True)[1]
         self.original_confidence_score = self.original_probabilities.max().item() * 100
 
-        perturbed_image = self.apply_iterative_fgsm_method(
-            image, epsilon, target_class
-        )
+        perturbed_image = self.apply_iterative_fgsm_method(image, epsilon, target_class)
 
         perturbation = perturbed_image - image
 

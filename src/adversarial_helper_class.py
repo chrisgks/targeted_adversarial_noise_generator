@@ -28,4 +28,3 @@ class AdversarialHelper:
         with open("../notebooks/data/imagenet_classes.txt") as f:
             classes = [line.strip() for line in f.readlines()]
             return classes
-        
