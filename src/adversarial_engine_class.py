@@ -131,7 +131,7 @@ class AdversarialEngine:
             case "bim":
                 perturbed_image = self._apply_fgsm_method(image, epsilon, target_class)
             case "pgdm":
-                perturbed_image = self._apply_pgd_mathod(image, target_class)
+                perturbed_image = self._apply_pgd_method(image, target_class)
             case other:
                 raise exceptions.AdversarialMethodNotSupportedError(attack_method)
 
