@@ -1,3 +1,4 @@
+import logging
 from PIL import Image
 import torchvision.transforms as transforms
 import torchvision.models as models
@@ -6,9 +7,11 @@ import torchvision.models as models
 class AdversarialHelper:
 
     def load_torchvision_pre_trained_model(model_name):
+        logging.info("Loading torchvision model...")
         return getattr(models, model_name)(pretrained=True).eval()
 
     def load_and_transform_image_to_tensor(image_path, size=(224, 224)):
+        logging.info("Loading and trasforming image...")
         transform = transforms.Compose(
             [
                 transforms.Resize(size),
