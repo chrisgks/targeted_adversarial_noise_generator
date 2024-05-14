@@ -7,5 +7,5 @@ target_class = 291
 epsilon = 0.02
 iterations = 1
 attack_engine.perform_adversarial_attack(
-    image_path=img_path, epsilon=epsilon, target_class=target_class, interations=iterations
+    image_path=img_path, epsilon=epsilon, target_class=target_class, iterations=iterations
 )
