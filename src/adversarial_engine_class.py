@@ -1,4 +1,5 @@
 import logging
+from PIL import Image
 
 import torch
 import torch.nn.functional as F
@@ -7,6 +8,7 @@ import torchvision.models as models
 import matplotlib.pyplot as plt
 
 from adversarial_helper_class import AdversarialHelper
+from data_classes import VisualisationData
 import exceptions
 
 
@@ -22,17 +24,15 @@ class AdversarialEngine:
         )
         logging.info("Model loaded successfully!!")
         self.classes: list[str] = AdversarialHelper.load_imagenet_classes()
-        # print("LOGGG ", type(self.original_prediction.item()), type(self.original_prediction))
-        print("LOGGG ", type(self.model))
 
         self.original_prediction: torch.FloatTensor | None = None
         self.adversarial_prediction: torch.FloatTensor | None = None
         self.original_confidence_score: float | None = None
         self.adversarial_confidence_score: float | None = None
 
-        self.original_image: torch.FloatTensor | None = None
-        self.perturbation_image: torch.FloatTensor | None = None
-        self.adversarial_image: torch.FloatTensor | None = None
+        self.original_image: Image | None = None
+        self.perturbation_image: Image | None = None
+        self.adversarial_image: Image | None = None
         logging.info("Adversarial Engine is up and running...")
 
     def _forward_pass(
@@ -89,6 +89,7 @@ class AdversarialEngine:
         iterations: int,
         attack_method: str,
         save_visual_on_disc: bool = True,
+        show_visualisation: bool = True,
     ) -> None:
         logging.info("Visualising attack...")
 
@@ -105,29 +106,29 @@ class AdversarialEngine:
             .strip()
         )
 
-        fig, axs = plt.subplots(1, 3, figsize=(15, 8))
-        axs[0].imshow(self.original_image)
-        axs[0].title.set_text(
-            f"Original Prediction \nClass name: {original_class_name}\nConfidence score: {self.original_confidence_score:.3f}%"
+        visual_data = VisualisationData(
+            original_image=self.original_image,
+            original_class_name=original_class_name,
+            original_confidence_score=self.original_confidence_score,
+            perturbation_image=self.perturbation_image,
+            epsilon=epsilon,
+            attack_method=attack_method,
+            iterations=iterations,
+            adversarial_image=self.adversarial_image,
+            adversarial_class_name=adversarial_class_name,
+            adversarial_confidence_score=self.adversarial_confidence_score,
         )
-        axs[0].axis("off")
 
-        axs[1].imshow(self.perturbation_image)
-        axs[1].title.set_text(
-            f"Perturbation (epsilon={epsilon})\nAttack method: {attack_method}\nIterations: {iterations}"
-        )
-        axs[1].axis("off")
+        AdversarialHelper.build_visuals(visual_data)
 
-        axs[2].imshow(self.adversarial_image)
-        axs[2].title.set_text(
-            f"Adversarial Prediction \nClass name: {adversarial_class_name}\nConfidence score: {self.adversarial_confidence_score:.3f}%"
-        )
-        axs[2].axis("off")
         if save_visual_on_disc:
             attack_id = f"example_attacked_by_{attack_method}_epsilon_{str(epsilon).replace(".", "")}_iterations_{iterations}"
-            plt.savefig(f"adversarial_outputs/{attack_id}.jpg")
+            output_path = f"adversarial_outputs/{attack_id}.jpg"
+            plt.savefig(output_path)
+            logging.info("Attack visualisation saved @ " + output_path)
 
-        plt.show()
+        if show_visualisation:
+            plt.show()
 
     def perform_adversarial_attack(
         self,
