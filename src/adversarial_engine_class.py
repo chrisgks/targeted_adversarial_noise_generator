@@ -40,7 +40,7 @@ class AdversarialEngine:
     ) -> tuple[torch.FloatTensor, float, float]:
         output: torch.FloatTensor = self.model(image)
         probabilities: torch.FloatTensor = F.softmax(output, dim=1)
-        prediction: float = output.max(1, keepdim=True)[1]
+        prediction: torch.FloatTensor = output.max(1, keepdim=True)[1]
         confidence_score: float = probabilities.max().item() * 100
 
         return probabilities, prediction, confidence_score

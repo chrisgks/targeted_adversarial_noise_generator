@@ -35,7 +35,10 @@ class AdversarialHelper:
     @staticmethod
     def transform_tensors_to_images(
         image_tensors: list[torch.FloatTensor],
-    ) -> tuple[torch.FloatTensor, torch.FloatTensor, torch.FloatTensor]:
+    ) -> tuple[
+        Image,
+        Image,
+    ]:
         images: tuple = ()
         for tensor in image_tensors:
             images += (transforms.ToPILImage()(tensor.squeeze(0)),)
