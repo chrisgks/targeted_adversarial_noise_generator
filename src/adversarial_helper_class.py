@@ -1,9 +1,9 @@
 import logging
 from PIL import Image
 
+import torch
 import torchvision.transforms as transforms
 import torchvision.models as models
-from torch.tensor import Tensor
 
 
 class AdversarialHelper:
@@ -16,7 +16,7 @@ class AdversarialHelper:
     @staticmethod
     def load_and_transform_image_to_tensor(
         image_path: str, size: tuple[int, int] = (224, 224)
-    ) -> Tensor:
+    ) -> torch.FloatTensor:
         logging.info("Loading and trasforming image...")
         transform = transforms.Compose(
             [
@@ -29,8 +29,8 @@ class AdversarialHelper:
 
     @staticmethod
     def transform_tensors_to_images(
-        image_tensors: list[Tensor],
-    ) -> tuple[Tensor, Tensor, Tensor]:
+        image_tensors: list[torch.FloatTensor],
+    ) -> tuple[torch.FloatTensor, torch.FloatTensor, torch.FloatTensor]:
         images: tuple = ()
         for tensor in image_tensors:
             images += (transforms.ToPILImage()(tensor.squeeze(0)),)

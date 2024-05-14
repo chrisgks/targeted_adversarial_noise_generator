@@ -3,7 +3,6 @@ import logging
 import torch
 import torch.nn.functional as F
 import torchvision.models as models
-from torch.tensor import Tensor
 
 import matplotlib.pyplot as plt
 
@@ -21,49 +20,56 @@ class AdversarialEngine:
         self.model: models = AdversarialHelper.load_torchvision_pre_trained_model(
             model_name=model_name
         )
+        logging.info("Model loaded successfully!!")
         self.classes: list[str] = AdversarialHelper.load_imagenet_classes()
+        # print("LOGGG ", type(self.original_prediction.item()), type(self.original_prediction))
+        print("LOGGG ", type(self.model))
 
-        self.original_prediction: Tensor | None = None
-        self.adversarial_prediction: Tensor | None = None
+        self.original_prediction: torch.FloatTensor | None = None
+        self.adversarial_prediction: torch.FloatTensor | None = None
         self.original_confidence_score: float | None = None
         self.adversarial_confidence_score: float | None = None
 
-        self.original_image: Tensor | None = None
-        self.perturbation_image: Tensor | None = None
-        self.adversarial_image: Tensor | None = None
+        self.original_image: torch.FloatTensor | None = None
+        self.perturbation_image: torch.FloatTensor | None = None
+        self.adversarial_image: torch.FloatTensor | None = None
         logging.info("Adversarial Engine is up and running...")
 
-    @classmethod
-    def _forward_pass(self, image: Tensor) -> tuple[Tensor, float, float]:
-        output: Tensor = self.model(image)
-        probabilities: Tensor = F.softmax(output, dim=1)
+    def _forward_pass(
+        self, image: torch.FloatTensor
+    ) -> tuple[torch.FloatTensor, float, float]:
+        output: torch.FloatTensor = self.model(image)
+        probabilities: torch.FloatTensor = F.softmax(output, dim=1)
         prediction: float = output.max(1, keepdim=True)[1]
         confidence_score: float = probabilities.max().item() * 100
 
         return probabilities, prediction, confidence_score
 
-    @classmethod
     def _apply_fgsm_method(
-        self, image: Tensor, epsilon: float, target_class: int, iterations: int = 15
-    ) -> Tensor:
+        self,
+        image: torch.FloatTensor,
+        epsilon: float,
+        target_class: int,
+        iterations: int = 15,
+    ) -> torch.FloatTensor:
 
         # for iterations=1 this function inmplements the Fast Sign Gradient Method (FGSM)
         # for iterations=n, where n>1, this function implements the Basic Iterative Method (BIM)
         # by applying iterations of the Fast Sign Gradiend Method (FGSM)
 
-        adversarial_image: Tensor = image.clone().detach()
+        adversarial_image: torch.FloatTensor = image.clone().detach()
         adversarial_image.requires_grad = True
 
         for _ in range(iterations):
-            output: Tensor = self.model(adversarial_image)
-            loss: Tensor = -torch.nn.functional.cross_entropy(
+            output: torch.FloatTensor = self.model(adversarial_image)
+            loss: torch.FloatTensor = -torch.nn.functional.cross_entropy(
                 output, torch.tensor([target_class], device=output.device)
             )
             self.model.zero_grad()
             loss.backward()
-            data_grad: Tensor = adversarial_image.grad.data
+            data_grad: torch.FloatTensor = adversarial_image.grad.data
 
-            sign_data_grad: Tensor = data_grad.sign()
+            sign_data_grad: torch.FloatTensor = data_grad.sign()
             adversarial_image = (
                 adversarial_image + epsilon * sign_data_grad / iterations
             )
@@ -74,13 +80,15 @@ class AdversarialEngine:
 
         return adversarial_image
 
-    @classmethod
-    def _apply_pgd_method(self, image: Tensor, target_class: int):
+    def _apply_pgd_method(self, image: torch.FloatTensor, target_class: int):
         raise NotImplementedError
 
-    @classmethod
     def visualise_attack(
-        self, epsilon: float, iterations: int, attack_method: str
+        self,
+        epsilon: float,
+        iterations: int,
+        attack_method: str,
+        save_visual_on_disc: bool = True,
     ) -> None:
         logging.info("Visualising attack...")
 
@@ -115,11 +123,12 @@ class AdversarialEngine:
             f"Adversarial Prediction \nClass name: {adversarial_class_name}\nConfidence score: {self.adversarial_confidence_score:.3f}%"
         )
         axs[2].axis("off")
-        plt.savefig("adversarial_outputs/adversarial_example.jpg")
+        if save_visual_on_disc:
+            attack_id = f"example_attacked_by_{attack_method}_epsilon_{str(epsilon).replace(".", "")}_iterations_{iterations}"
+            plt.savefig(f"adversarial_outputs/{attack_id}.jpg")
 
         plt.show()
 
-    @classmethod
     def perform_adversarial_attack(
         self,
         image_path: str,
