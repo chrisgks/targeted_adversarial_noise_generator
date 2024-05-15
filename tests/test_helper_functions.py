@@ -1,11 +1,33 @@
 import pytest
+import torch
 
 from src.adversarial_helper_class import AdversarialHelper
 
 
 @pytest.mark.unittest
-def test_load_and_transform_image_to_tensor():
-    pass
+@pytest.mark.parametrize(
+    "image_path,expected,testing_scenario",
+    [
+        ("tests/fixtures/vito1.jpg", True, "image transformed successfully"),
+        (
+            "tests/fixtures/randomimage.png",
+            False,
+            "image did not transfom successfully",
+        ),
+    ],
+)
+def test_load_and_transform_image_to_tensor(
+    image_path: str, expected: bool, testing_scenario
+):
+    try:
+        result = isinstance(
+            AdversarialHelper.load_and_transform_image_to_tensor(image_path),
+            torch.FloatTensor,
+        )
+    except FileNotFoundError:
+        result = False
+        pass
+    assert result == expected, testing_scenario
 
 
 @pytest.mark.unittest
