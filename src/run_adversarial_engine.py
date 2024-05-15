@@ -7,7 +7,7 @@ target_class = 291
 epsilon = 0.02
 
 iterations = 10
-attack_method = "fgsm"
+attack_method = "bim"
 attack_engine.perform_adversarial_attack(
     image_path=img_path,
     epsilon=epsilon,
