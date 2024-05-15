@@ -35,10 +35,7 @@ class AdversarialHelper:
     @staticmethod
     def transform_tensors_to_images(
         image_tensors: list[torch.FloatTensor],
-    ) -> tuple[
-        Image,
-        Image,
-    ]:
+    ) -> tuple[Image.Image,]:
         images: tuple = ()
         for tensor in image_tensors:
             images += (transforms.ToPILImage()(tensor.squeeze(0)),)
@@ -46,7 +43,7 @@ class AdversarialHelper:
 
     @staticmethod
     def load_imagenet_classes() -> list[str]:
-        with open("../notebooks/data/imagenet_classes.txt") as f:
+        with open("data/imagenet_classes.txt") as f:
             classes = [line.strip() for line in f.readlines()]
             return classes
 

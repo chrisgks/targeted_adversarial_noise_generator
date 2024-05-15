@@ -30,9 +30,9 @@ class AdversarialEngine:
         self.original_confidence_score: float | None = None
         self.adversarial_confidence_score: float | None = None
 
-        self.original_image: Image | None = None
-        self.perturbation_image: Image | None = None
-        self.adversarial_image: Image | None = None
+        self.original_image: Image.Image | None = None
+        self.perturbation_image: Image.Image | None = None
+        self.adversarial_image: Image.Image | None = None
         logging.info("Adversarial Engine is up and running...")
 
     def _forward_pass(
