@@ -10,6 +10,7 @@ class BaseModel(EnrichedPydanticBaseModel):
 
 
 class VisualisationData(BaseModel):
+    # Taking advantage of pydantic's auto type validation feature
     original_image: Image
     original_class_name: str
     original_confidence_score: float
