@@ -8,10 +8,12 @@ epsilon = 0.02
 
 iterations = 10
 attack_method = "bim"
-attack_engine.perform_adversarial_attack(
-    image_path=img_path,
-    epsilon=epsilon,
-    target_class=target_class,
-    attack_method=attack_method,
-    iterations=iterations,
+print(
+    attack_engine.perform_adversarial_attack(
+        image_path=img_path,
+        epsilon=epsilon,
+        target_class=target_class,
+        attack_method=attack_method,
+        iterations=iterations,
+    )
 )

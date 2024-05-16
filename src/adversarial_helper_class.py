@@ -1,4 +1,5 @@
 import logging
+import json
 from PIL import Image
 
 import torch
@@ -42,9 +43,9 @@ class AdversarialHelper:
         return images
 
     @staticmethod
-    def load_imagenet_classes() -> list[str]:
-        with open("data/imagenet_classes.txt") as f:
-            classes = [line.strip() for line in f.readlines()]
+    def load_imagenet_classes() -> dict[int, str]:
+        with open("src/data/imagenet_classes.json") as j:
+            classes = json.load(j)
             return classes
 
     def build_visuals(visual_data: VisualisationData):
@@ -52,7 +53,7 @@ class AdversarialHelper:
         fig, axs = plt.subplots(1, 3, figsize=(15, 8))
         axs[0].imshow(visual_data.original_image)
         axs[0].title.set_text(
-            f"Original Prediction \nClass name: {visual_data.original_class_name}\nConfidence score: {visual_data.original_confidence_score:.3f}%"
+            f"Original Prediction \nClass id: {visual_data.original_class_id}\nClass name: {visual_data.original_class_name}\nConfidence score: {visual_data.original_confidence_score:.3f}%"
         )
         axs[0].axis("off")
 
@@ -64,6 +65,6 @@ class AdversarialHelper:
 
         axs[2].imshow(visual_data.adversarial_image)
         axs[2].title.set_text(
-            f"Adversarial Prediction \nClass name: {visual_data.adversarial_class_name}\nConfidence score: {visual_data.adversarial_confidence_score:.3f}%"
+            f"Adversarial Prediction \nClass id: {visual_data.adversarial_class_id}\nClass name: {visual_data.adversarial_class_name}\nConfidence score: {visual_data.adversarial_confidence_score:.3f}%"
         )
         axs[2].axis("off")

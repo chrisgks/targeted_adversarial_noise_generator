@@ -23,12 +23,17 @@ class AdversarialEngine:
             model_name=model_name
         )
         logging.info("Model loaded successfully!!")
-        self.classes: list[str] = AdversarialHelper.load_imagenet_classes()
+        self.classes: dict[str, str] = AdversarialHelper.load_imagenet_classes()
 
         self.original_prediction: torch.FloatTensor | None = None
-        self.adversarial_prediction: torch.FloatTensor | None = None
         self.original_confidence_score: float | None = None
+        self.original_class_name: float | None = None
+        self.original_class_id: str | None = None
+
+        self.adversarial_prediction: torch.FloatTensor | None = None
         self.adversarial_confidence_score: float | None = None
+        self.adversarial_class_name: float | None = None
+        self.adversarial_class_id: str | None = None
 
         self.original_image: Image.Image | None = None
         self.perturbation_image: Image.Image | None = None
@@ -93,29 +98,24 @@ class AdversarialEngine:
     ) -> None:
         logging.info("Visualising attack...")
 
-        original_class_name: str = (
-            self.classes[self.original_prediction.item()]
-            .split(",")[0]
-            .replace("'", "")
-            .strip()
-        )
-        adversarial_class_name: str = (
-            self.classes[self.adversarial_prediction.item()]
-            .split(",")[0]
-            .replace("'", "")
-            .strip()
-        )
+        self.original_class_id = str(self.original_prediction.item())
+        self.original_class_name = self.classes[self.original_class_id]
+
+        self.adversarial_class_id = str(self.adversarial_prediction.item())
+        self.adversarial_class_name = self.classes[self.adversarial_class_id]
 
         visual_data = VisualisationData(
             original_image=self.original_image,
-            original_class_name=original_class_name,
+            original_class_name=self.original_class_name,
+            original_class_id=self.original_class_id,
             original_confidence_score=self.original_confidence_score,
             perturbation_image=self.perturbation_image,
             epsilon=epsilon,
             attack_method=attack_method,
             iterations=iterations,
             adversarial_image=self.adversarial_image,
-            adversarial_class_name=adversarial_class_name,
+            adversarial_class_name=self.adversarial_class_name,
+            adversarial_class_id=self.adversarial_class_id,
             adversarial_confidence_score=self.adversarial_confidence_score,
         )
 
@@ -123,7 +123,7 @@ class AdversarialEngine:
 
         if save_visual_on_disc:
             attack_id = f"example_attacked_by_{attack_method}_epsilon_{str(epsilon).replace(".", "")}_iterations_{iterations}"
-            output_path = f"adversarial_outputs/{attack_id}.jpg"
+            output_path = f"src/adversarial_outputs/{attack_id}.jpg"
             plt.savefig(output_path)
             logging.info("Attack visualisation saved @ " + output_path)
 
@@ -179,3 +179,5 @@ class AdversarialEngine:
         self.visualise_attack(
             epsilon=epsilon, attack_method=attack_method, iterations=iterations
         )
+
+        return self.adversarial_class_id, self.adversarial_class_name
