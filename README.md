@@ -32,7 +32,7 @@ The engine can be called from the root folder like below:
 
 `python src/run_adversarial_engine.py <path/to/image/file> <class_id>`
 
-where `<path/to/image/file>` is self-explanatory; and `class_id` is imagenet's class index. The default attack method is **BIM**. The attack method can be specified by an additional argument like below:
+where `<path/to/image/file>` is self-explanatory; and `class_id` is [imagenet's class index](https://github.com/chrisgks/targeted_adversarial_perturbations/blob/9ade4d1ddd9016721410e969b0d91c329f55c4c6/src/data/imagenet_classes.json). The default attack method is **BIM**. The attack method can be specified by an additional argument like below:
 
 `python src/run_adversarial_engine.py <path/to/image/file> <class_id> fgsm` or,
 
