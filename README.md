@@ -1,5 +1,8 @@
 # Targeted Adversarial Examples
 
+
+
+
 TODO:
 - [x] implement FGSM (Fast Gradient Sign Attack) and BIM (basic iterative method) - DONE, basically iterative FGSM
 - [ ] add tests, logging, and exception handling/edge cases - make production ready
