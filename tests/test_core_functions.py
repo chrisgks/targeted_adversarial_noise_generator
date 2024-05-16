@@ -1,7 +1,4 @@
 import pytest
-import torch
-
-from PIL.Image import Image
 
 from src.adversarial_engine_class import AdversarialEngine
 

@@ -1,5 +1,5 @@
 from pydantic import BaseModel as EnrichedPydanticBaseModel
-from PIL import Image
+from PIL.Image import Image
 
 
 class BaseModel(EnrichedPydanticBaseModel):

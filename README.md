@@ -40,11 +40,11 @@ where `<path/to/image/file>` is self-explanatory; and `class_id` is [imagenet's 
 
 Other parameters that can be tweaked:
 - `iterations` (BIM Method only - number of iterations)
-- `epsilon` (Bothe methods- perturbation intensity)
+- `epsilon` (Both methods- perturbation intensity)
 
 
 ## Contributions
-Anyone who would like to contribute to this library, please feel free to reach out to the author; or open a PR.
+Anyone who would like to contribute to this library, please feel free to reach out to the author; or raise a PR.
 
 
 ### To-do & future features
