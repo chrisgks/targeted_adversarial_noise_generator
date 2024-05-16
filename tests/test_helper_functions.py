@@ -77,8 +77,9 @@ def test_load_torchvision_pre_trained_model(
         pass
 
 
-@pytest.mark.skip
 @pytest.mark.unittest
 def test_load_imagenet_classes():
     result = AdversarialHelper.load_imagenet_classes()
-    assert isinstance(result, list) == True, "imagenet classes should be a list"
+    assert (
+        isinstance(result, dict) == True
+    ), "imagenet classes should be dict of str:str pairs"

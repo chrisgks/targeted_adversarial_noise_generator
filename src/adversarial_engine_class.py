@@ -94,7 +94,7 @@ class AdversarialEngine:
         iterations: int,
         attack_method: str,
         save_visual_on_disc: bool = True,
-        show_visualisation: bool = True,
+        show_visualisation: bool = False,
     ) -> None:
         logging.info("Visualising attack...")
 

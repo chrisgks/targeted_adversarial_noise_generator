@@ -18,9 +18,54 @@ test_engine = AdversarialEngine()
             0.02,
             "fgsm",
             1,
+            291,  # imagenet class of the lion
+            "fgsm method did not mamange to confuse the model that the input is a lion",
+        ),
+        (
+            ("291", "lion"),
+            "tests/fixtures/vito1.jpg",
+            0.02,
+            "bim",
+            15,
             291,
-            "working scenario",
-        )
+            "ibm methond managed to confuse the model that the input is a lion",
+        ),
+        (
+            ("961", "dough"),
+            "tests/fixtures/vito4.jpg",
+            0.02,
+            "fgsm",
+            1,
+            291,  # imagenet class of the lion
+            "fgsm method did not mamange to confuse the model that the input is a lion",
+        ),
+        (
+            ("291", "lion"),
+            "tests/fixtures/vito4.jpg",
+            0.02,
+            "bim",
+            15,
+            291,  # imagenet class of the lion
+            "fgsm method did not mamange to confuse the model that the input is a lion",
+        ),
+        (
+            ("669", "mosquito_net"),
+            "tests/fixtures/junky2.jpeg",
+            0.02,
+            "fgsm",
+            1,
+            291,  # imagenet class of the lion
+            "fgsm method did not mamange to confuse the model that the input is a lion",
+        ),
+        (
+            ("291", "lion"),
+            "tests/fixtures/junky2.jpeg",
+            0.02,
+            "bim",
+            10,
+            291,  # imagenet class of the lion
+            "fgsm method did not mamange to confuse the model that the input is a lion",
+        ),
     ],
 )
 def test_perform_adversarial_attack(
@@ -40,4 +85,3 @@ def test_perform_adversarial_attack(
         iterations=iterations,
     )
     assert result == expected, testing_scenario
-    print(result)
