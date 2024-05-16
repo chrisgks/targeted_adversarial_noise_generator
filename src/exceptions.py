@@ -4,3 +4,11 @@ class AdversarialMethodNotSupportedError(Exception):
         self.method: str = method
         self.message: str = message
         super().__init__(self.message)
+
+
+class ImageTypeNotSupportedError(Exception):
+
+    def __init__(self, method: str, message: str = "Image type not supported!"):
+        self.method: str = method
+        self.message: str = message
+        super().__init__(self.message)

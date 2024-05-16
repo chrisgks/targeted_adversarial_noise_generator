@@ -22,7 +22,7 @@ class AdversarialEngine:
         self.model: models = AdversarialHelper.load_torchvision_pre_trained_model(
             model_name=model_name
         )
-        logging.info("Model loaded successfully!!")
+        logging.info("Model loaded successfully!")
         self.classes: dict[str, str] = AdversarialHelper.load_imagenet_classes()
 
         self.original_prediction: torch.FloatTensor | None = None
@@ -138,7 +138,9 @@ class AdversarialEngine:
         attack_method: str,
         iterations: int,
     ) -> None:
-        logging.info("Performing adversarial attack...")
+        logging.info(
+            f"Performing adversarial attack with the fillowing params: \n\t attack_method: {attack_method}\n\t epsilon: {epsilon}\n\t iterations: {iterations}\n\t target_class: {target_class}"
+        )
         image = AdversarialHelper.load_and_transform_image_to_tensor(
             image_path=image_path
         )
